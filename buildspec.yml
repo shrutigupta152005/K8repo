@@ -1,13 +1,29 @@
+version: 0.2
+
 phases:
+  install:
+    runtime-versions:
+      python: 3.9
+
+    commands:
+      - echo Installing kubectl
+      - curl -o kubectl https://amazon-eks.s3.us-east-1.amazonaws.com/1.35.0/2025-06-01/bin/linux/amd64/kubectl
+      - chmod +x kubectl
+      - mv kubectl /usr/local/bin/
+
   pre_build:
     commands:
-      - aws eks update-kubeconfig --region us-east-1 --name demo-cluster
+      - echo Configuring kubeconfig for EKS
+      - aws eks update-kubeconfig --name demo-cluster --region us-east-1
+
+      - echo Checking cluster access
+      - kubectl get nodes
 
   build:
     commands:
-      - kubectl apply -f namespace.yaml
-      - kubectl apply -f configmap.yaml
-      - kubectl apply -f secret.yaml
-      - kubectl apply -f deployment.yaml
-      - kubectl apply -f service.yaml
-      - kubectl apply -f ingress.yaml
+      - echo Applying all Kubernetes manifests from repo
+      - kubectl apply -f .
+
+  post_build:
+    commands:
+      - echo Deployment completed successfully on demo-cluster
