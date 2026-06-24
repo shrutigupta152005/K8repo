@@ -2,26 +2,23 @@ version: 0.2
 
 phases:
   install:
-    runtime-versions:
-      python: 3.9
-
     commands:
-      - echo Installing kubectl
-      - curl -o kubectl https://amazon-eks.s3.us-east-1.amazonaws.com/1.35.0/2025-06-01/bin/linux/amd64/kubectl
+      - echo Installing kubectl safely
+      - curl -LO "https://dl.k8s.io/release/v1.29.0/bin/linux/amd64/kubectl"
       - chmod +x kubectl
       - mv kubectl /usr/local/bin/
+      - kubectl version --client
 
   pre_build:
     commands:
-      - echo Configuring kubeconfig for EKS
+      - echo Configuring kubeconfig for EKS cluster
       - aws eks update-kubeconfig --name demo-cluster --region us-east-1
-
-      - echo Checking cluster access
+      - echo Verifying cluster connection
       - kubectl get nodes
 
   build:
     commands:
-      - echo Applying all Kubernetes manifests from repo
+      - echo Applying Kubernetes manifests from repo
       - kubectl apply -f .
 
   post_build:
