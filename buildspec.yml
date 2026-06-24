@@ -19,7 +19,12 @@ phases:
   build:
     commands:
       - echo Applying Kubernetes manifests from repo
-      - kubectl apply -f .
+      - kubectl apply -f deployment.yaml
+      - kubectl apply -f service.yaml
+      - kubectl apply -f ingress.yaml
+      - kubectl apply -f configmap.yaml
+      - kubectl apply -f secret.yaml
+      - kubectl apply -f namespace.yaml
 
   post_build:
     commands:
