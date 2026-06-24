@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maintenance-page
+  namespace: maintenance
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: maintenance
+  template:
+    metadata:
+      labels:
+        app: maintenance
+    spec:
+      containers:
+      - name: maintenance
+        image: 027265528423.dkr.ecr.us-east-1.amazonaws.com/maintenance-page:latest
+        ports:
+        - containerPort: 80
